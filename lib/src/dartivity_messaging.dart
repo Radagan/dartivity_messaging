@@ -111,20 +111,17 @@ class DartivityMessaging {
   ///
   /// wait - whether to wait for a message or not, default is not
   Future<String> receiveRaw({bool wait: false}) async {
-    final Completer<String> completer =
-    new Completer<String>();
+    final Completer<String> completer = new Completer<String>();
     if (ready) {
       final pullEvent = await _subscription.pull(wait: wait);
       if (pullEvent != null) {
         await pullEvent.acknowledge();
         final String messageString = pullEvent.message.asString;
-          completer.complete(messageString);
-        }
-      } else {
+        completer.complete(messageString);
+      }
+      else {
         completer.complete(null);
       }
-    } else {
-      completer.complete(null);
     }
     return completer.future;
   }
