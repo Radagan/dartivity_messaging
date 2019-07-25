@@ -54,14 +54,21 @@ class DartivityMessaging {
   /// which should be in JSON format
   /// projectName - The project name(actually the google project id)
   /// topic - the subscription topic
-  Future<bool> initialise(
-      String credentialsFile, String projectName, String topic) async {
+  Future<bool> initialise(String credentialsFile, String projectName, String topic) async {
     // Validation
     if (credentialsFile == null) {
       throw new DartivityMessagingException(
           DartivityMessagingException.noCredfileSpecified);
     }
 
+    final Completer<bool> completer = new Completer<bool>();
+    // Get the credentials file as a string and create a credentials class
+    _topic = topic;
+    final String jsonCredentials = new File(credentialsFile).readAsStringSync();
+    return initialiseJson(jsonCredentials, projectName, topic);
+  }
+
+  Future<bool> initialiseJson(String jsonCredentials, String projectName, String topic) async {
     if (projectName == null) {
       throw new DartivityMessagingException(
           DartivityMessagingException.noProjectnameSpecified);
@@ -72,10 +79,6 @@ class DartivityMessaging {
           DartivityMessagingException.noTopicSpecified);
     }
 
-    final Completer<bool> completer = new Completer<bool>();
-    // Get the credentials file as a string and create a credentials class
-    _topic = topic;
-    final String jsonCredentials = new File(credentialsFile).readAsStringSync();
     final auth.ServiceAccountCredentials credentials =
         new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
 
