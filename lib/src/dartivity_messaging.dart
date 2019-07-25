@@ -61,9 +61,6 @@ class DartivityMessaging {
           DartivityMessagingException.noCredfileSpecified);
     }
 
-    final Completer<bool> completer = new Completer<bool>();
-    // Get the credentials file as a string and create a credentials class
-    _topic = topic;
     final String jsonCredentials = new File(credentialsFile).readAsStringSync();
     return initialiseJson(jsonCredentials, projectName, topic);
   }
@@ -78,6 +75,10 @@ class DartivityMessaging {
       throw new DartivityMessagingException(
           DartivityMessagingException.noTopicSpecified);
     }
+
+    final Completer<bool> completer = new Completer<bool>();
+    // Get the credentials file as a string and create a credentials class
+    _topic = topic;
 
     final auth.ServiceAccountCredentials credentials =
         new auth.ServiceAccountCredentials.fromJson(jsonCredentials);
